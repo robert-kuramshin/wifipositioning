@@ -19,8 +19,9 @@ gpgga = nmea.GPGGA()
 while 1:
     x=ser.readline()
     if (x.startswith('$GPGGA')):
-        gpgga.parse(data)
-        print 'Lat: ',gpgga.latitude
-        print 'Long: ', gpgga.longitude
-        print 'Alt: ', gpgga.antenna_altitudes,' ', gpgga.altitude_units
+         gpgga.parse(x)
+         print 'Lat: ', gpgga.latitude
+         print 'Long: ', gpgga.longitude
+         print 'Alt: ', gpgga.antenna_altitude, ' ', gpgga.altitude_units
+         print 'No of sats: ', gpgga.num_sats
         
