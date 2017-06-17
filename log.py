@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import time
+import datetime
 import serial
 import subprocess
+import re
 from pynmea import nmea
 
 def getNetworks():
@@ -38,15 +40,24 @@ ser = serial.Serial(
 counter = 0
 gpgga = nmea.GPGGA()
 
-file = open("dump.txt","w")
+filename=''
+date_time= str(datetime.datetime.now())
+for element in re.findall(r'\d+',date_time):
+    filename=filename+element
+file = open(filename+".txt","w")
 
 while 1:
     line=ser.readline()
     if (line.startswith('$GPGGA')):
+        print "Position Locked"
         gpgga.parse(line)
         
-        coordinates = [gpgga.latitude,gpgga.longitude,gpgga.antenna_altitude]
-        networks = getNetworks()
+        coordinates = [gpgga.latitude,gpgga.longitude,gpgga.antenna_altitude,gpgga.num_sats]
+
+        try:
+            networks = getNetworks()
+        except:
+            print "Error Getting Networks"
 
         for coord in coordinates:
             file.write(coord+"\n")
