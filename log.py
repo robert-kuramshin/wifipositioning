@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import time
 import serial
-from pynmea import nmea
 import subprocess
+from pynmea import nmea
 
 def getNetworks():
     networks = []
@@ -26,9 +26,6 @@ def getNetworks():
         networks.append([wifi[address_start:address_end],wifi[strength_start:strength_end],wifi[quality_start:quality_end]])
     return networks
 
-
-data_pairs = []
-
 ser = serial.Serial(
     port='/dev/serial0',
     baudrate = 9600,
@@ -41,14 +38,22 @@ ser = serial.Serial(
 counter = 0
 gpgga = nmea.GPGGA()
 
+file = open("dump.txt","w")
 
 while 1:
     line=ser.readline()
     if (line.startswith('$GPGGA')):
         gpgga.parse(line)
+        
         coordinates = [gpgga.latitude,gpgga.longitude,gpgga.antenna_altitude]
         networks = getNetworks()
-        data_pairs.append([coordinates,networks])
+
+        for coord in coordinates:
+            file.write(coord+"\n")
+        for net in networks:
+            for prop in net:
+                file.write(prop+"\n")
+
         print [coordinates,networks]
         time.sleep(5)
         
