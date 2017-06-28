@@ -1,14 +1,24 @@
 from pymongo import MongoClient
 
-
 def create_json(array):
     json=[]
     for element in array:
+        networks=[]
+        for network in element[1]:
+            networks.append({
+                "Address":network[0],
+                "Signal":network[1],
+                "Quality":network[2]
+            })
         json.append({
             "coordinates":element[0],
-            "networks":element[1]
+            "networks":networks
         })
     return json 
+def networks_json(pairs):
+    networks=
+    for pair in pairs:
+        for wifi in par[1]:
 
 def parse_file(name):
     pairs = []
@@ -50,14 +60,14 @@ def parse_file(name):
                 count=1
                 lat = line
             else:
-                adr = line
+                adr = line.split(" ")[1]
                 count=count+1
         elif (count-4==1):
-            sig = line
+            sig = line.split(" ")[1]
             count=count+1
         elif (count-4==2):
             count=4
-            qlt = line
+            qlt = line.split(" ")[1]
             pairs[pairs_count][1].append([adr,sig,qlt]) 
     return pairs
             
